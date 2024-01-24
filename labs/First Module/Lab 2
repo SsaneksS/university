@@ -1,0 +1,41 @@
+#include <iostream>
+#include <math.h>
+
+using namespace std;
+int main()
+{
+	int z;
+	double x, y, g;
+
+	cout << "Choose the function f(x): " << endl;
+	cout << "1: sh(x); 2: x^2; 3: e^x" << endl;
+	cin >> z;
+	cout << "Write x =" << endl;
+	cin >> x;
+	cout << "Write y =" << endl;
+	cin >> y;
+
+	switch (z) {
+	case 1: z = sinh(x); 
+		break;
+	case 2: z = pow(x, 2.); 
+		break;
+	case 3: z = exp(x); 
+		break;
+	default: 
+		cout << "You choosed non-existent option!" << endl;
+		return 0;
+	}
+
+	if ((x / y) == 0) {
+		g = exp(z - y) + cbrt(x);
+	}
+	else if (-5 < x / y < 0) {
+		g = pow(x, 2.) - log(pow(y, 2.) + x);
+	}
+	else {
+		g = 2 * pow(z, 2.) - pow(y, 3.);
+	}
+	cout << "Result g = " << g;
+	return 0;
+}
