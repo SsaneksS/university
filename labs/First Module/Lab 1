@@ -1,0 +1,27 @@
+#include <iostream>
+#include <math.h>
+
+using namespace std;
+int main()
+{
+	double x, y, z, a, b, s;
+
+	cout << "Write x = " << endl;
+	cin >> x;
+	cout << "Write y = " << endl;
+	cin >> y;
+	cout << "Write z = " << endl;
+	cin >> z;
+	cout << "" << endl;
+
+	a = sqrt(10 * (cbrt(x) + pow(x, y + 2.)));
+	b = pow(asin(z), 2) - fabs(x - y);
+	s = a * b;
+
+	cout << "Number x = " << x << endl;
+	cout << "Number y = " << y << endl;
+	cout << "Number z = " << z << endl;
+	cout << "Result s = " << s;
+
+	return 0;
+}
