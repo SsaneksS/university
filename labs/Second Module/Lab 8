@@ -1,0 +1,144 @@
+#include <fstream>
+#include <iostream>
+#include <math.h>
+#include <iomanip>
+#include <stdio.h>
+#include <io.h>
+
+using namespace std;
+
+struct spisok {
+	int nomer;
+	double time1;
+	double time2;
+	char punkt1[50];
+	char punkt2[50];
+} raspis;
+
+int main() {
+	setlocale(LC_ALL, "RUS");
+
+	int var = 1;
+	char binfile[50] = "rasp";
+	char textfile[50] = "BABINTUS";
+	char proverka[50] = "Grodno";
+
+	FILE* fl;
+
+	while (var != 0) {
+
+		cout << "MENU: " << "(Пожалуйста напишите носер вашего желаемого действия:)" << endl;
+		cout << "1: " << "Создание бинарного файла с расписанием" << endl;
+		cout << "2: " << "Прочтение и вывод файла на экран консоли" << endl;
+		cout << "3: " << "Создание текстового файла" << endl;
+		cout << "0: " << "Exit" << endl;
+		cin >> var;
+
+		switch (var) {
+		case 1:
+		{
+			int n;
+			cout << "Напишите количество рейсов: " << endl;
+			cin >> n;
+
+			if (fopen_s(&fl, binfile, "w+b") == 0) {
+
+
+				for (int i = 0; i < n; i++) {
+					cout << "Введите номер рейса: " << endl;
+					cin >> raspis.nomer;
+					cout << "Введите время отправления рейса: " << endl;
+					cin >> raspis.time1;
+					cout << "Введите пункт отправления рейса: " << endl;
+					cin >> (raspis.punkt1);
+					cout << "Введите время прибытия рейса: " << endl;
+					cin >> raspis.time2;
+					cout << "Введите пункт прибытия рейсов: " << endl;
+					cin >> (raspis.punkt2);
+					fwrite(&raspis, sizeof(spisok), 1, fl);
+				}
+				fclose(fl);
+				cout << "Файл был создан" << endl;
+			}
+			else {
+				cout << "Файл был НЕ создан" << endl;
+			}
+		}
+		break;
+
+		case 2: {
+			if (fopen_s(&fl, binfile, "r+b") == 0) {
+				int n;
+				n = _filelength(_fileno(fl)) / sizeof(spisok);
+				spisok* list = new spisok[n];
+				fread(list, sizeof(spisok), n, fl);
+
+				spisok vrem;
+				for (int i = 0; i < n - 1; i++) {
+					for (int j = i + 1; j < n; j++)
+						if (strcmp(list[j].punkt2, proverka) == 0 && strcmp(list[i].punkt2, proverka) == 0 && list[j].time1 < list[i].time1) {
+							vrem = list[i];
+							list[i] = list[j];
+							list[j] = vrem;
+
+						}
+				}
+
+				if (n != 0)
+					cout << setw(14) << "Номер рейса. " << setw(14) << "Время отпр. " << setw(14) << "Пункт отпр. " << setw(14) << "Время приб. " << setw(14) << "Пункт приб. " << endl;
+
+				for (int i = 0; i < n; i++) {
+					if (strcmp(list[i].punkt2, proverka) == 0)
+						cout << setw(14) << list[i].nomer << setw(14) << list[i].time1 << setw(14) << list[i].punkt1 << setw(14) << list[i].time2 << setw(14) << list[i].punkt2 << endl;
+				}
+				delete[] list;
+				fclose(fl);
+			}
+			else {
+				cout << "ERROR 404" << endl;
+			}
+		}
+			  break;
+
+		case 3: {
+			FILE* ft;
+			if (fopen_s(&fl, binfile, "r+b") != 0) return 0;
+			if (fopen_s(&ft, textfile, "wt+") == 0) {
+				int n;
+				n = _filelength(_fileno(fl)) / sizeof(spisok);
+
+				for (int i = 0; i < n; i++) {
+					fread(&raspis, sizeof(spisok), 1, fl);
+					if (strcmp(raspis.punkt2, proverka) == 0) {
+
+						fprintf(ft, "Номер рейса. %i\n", raspis.nomer);
+						fprintf(ft, "Время отпр. %f\n", raspis.time1);
+						fprintf(ft, "Пункт отпр. %s\n", raspis.punkt1);
+						fprintf(ft, "Время приб. %f\n", raspis.time2);
+						fprintf(ft, "Пункт приб. %s\n", raspis.punkt2);
+
+					}
+				}
+				cout << "Удачно! Ваш текстовый файл создан.";
+				fclose(fl);
+				fclose(ft);
+			}
+			else {
+				cout << "ERROR! Ваш текстовый файл НЕ создан.";
+			}
+
+		}
+			  break;
+
+		case 0: {
+			return 0;
+		} break;
+
+		default: {
+			cout << "Извините вы допустили ошибку в выборе действий" << endl;
+		} break;
+
+		}
+	}
+	return 0;
+}
