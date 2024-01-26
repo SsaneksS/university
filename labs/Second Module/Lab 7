@@ -1,0 +1,62 @@
+#include <iostream>
+#include <math.h>
+#include <iomanip>
+
+using namespace std;
+
+
+int main() {
+	int n;
+	setlocale(LC_ALL, "RUS");
+
+	struct spisok {
+		int nomer;
+		double time1;
+		double time2;
+		char punkt1[50];
+		char punkt2[50];
+	} *rasp;
+
+	char str_prov1[50] = "Grodno";
+
+	cout << "Количество автобусов: " << endl;
+	cin >> n;
+	rasp = new spisok[n];
+
+    for (int i = 0; i < n; i++) {
+		cout << "Номер рейса автобуса: " << endl;
+		cin >> rasp[i].nomer;
+		cout << "Время отбытия: " << endl;
+		cin >> rasp[i].time1;
+		cout << "Пункт отправления: " << endl;
+		cin >> rasp[i].punkt1; 
+		cout << "Время прибытия: " << endl;
+		cin >> rasp[i].time2;
+		cout << "Пункт прибытия: " << endl;
+		cin >> rasp[i].punkt2;
+	}
+
+	spisok vrem;
+
+	for (int i = 0; i < n - 1; i++) {
+		for (int j = i + 1; j < n; j++) {
+			if (strcmp(rasp[i].punkt2, str_prov1) == 0 && strcmp(rasp[j].punkt2, str_prov1) == 0 && rasp[j].time1 < rasp[i].time1) {
+				vrem = rasp[i];
+				rasp[i] = rasp[j];
+				rasp[j] = vrem;
+
+			}
+		}
+	}
+
+	cout << setw(18) << "Номер автобуса " << setw(18) << "Время отбытия " << setw(18) << "Пункт отбытия " << setw(18) << "Время прибытия " << setw(18) << "Пункт назначения " << endl;
+
+	for (int i = 0; i < n; i++) {
+		if (strcmp(rasp[i].punkt2, str_prov1) == 0) {
+			cout << setw(14) << rasp[i].nomer << setw(14) << rasp[i].time1 << setw(14) << rasp[i].punkt1 << setw(14) << rasp[i].time2 << setw(14) << rasp[i].punkt2 << endl;
+		}
+	}
+
+	delete[]rasp;
+	return 0;
+}
